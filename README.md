@@ -35,7 +35,7 @@ function makeRequest (query) {
 ```
 
 it understands promises! any data source that returns a promise will be
-handled smartly, such that if: it resolves the resolved value is emitted
+handled smartly, such that: if it resolves the resolved value is emitted
 (rather than the promise itself), and if it is rejected, an error event is
 emitted with the rejected value.
 
