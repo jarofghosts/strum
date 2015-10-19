@@ -1,8 +1,7 @@
-var isFunction = require('util').isFunction
-
 var isStream = require('is-stream')
 var isIterable = require('is-iterable')
 var isPromise = require('is-promise')
+var isFunction = require('is-function')
 
 var wrapFunction = require('./lib/function')
 var wrapIterable = require('./lib/iterable')
