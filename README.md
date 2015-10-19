@@ -25,12 +25,19 @@ function times2 (x) {
 kinda handy, but where things get really neat:
 
 ```javascript
+var strum = require('strum')
+var fetch = require('isomorphic-fetch')
+
 strum(['dogs', 'cats', 'bears', 'gorillas'])
   .pipe(strum(makeRequest))
+  .pipe(strum(getBody))
   .pipe(process.stdout)
 
 function makeRequest (query) {
-  return fetch('http://google.com/?q=' + query)
+  return fetch('/some/api/?query=' + query)
+    .then(function (response) {
+      return response.text()
+    })
 }
 ```
 
@@ -39,7 +46,29 @@ handled smartly, such that: if it resolves the resolved value is emitted
 (rather than the promise itself), and if it is rejected, an error event is
 emitted with the rejected value.
 
-## api
+here, have another contrived example:
+
+```javascript
+const strum = require('strum')
+
+strum(foreverRandom()).pipe(strum(headsOrTails)).pipe(process.stdout)
+
+function headsOrTails (num) {
+  return (num < 0.5 ? 'heads' : 'tails') + '\n'
+}
+
+function * foreverRandom () {
+  while (true) {
+    yield new Promise((resolve, reject) => {
+      setTimeout(() => {
+        resolve(Math.random())
+      }, 1000)
+    })
+  }
+}
+```
+
+## API
 
 `strum(source, _options) -> stream`
 
