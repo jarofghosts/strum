@@ -210,23 +210,33 @@ test('those promises can cause errors', function (t) {
   }
 })
 
-test('can make a stream from an iterable', function (t) {
-  t.plan(5)
+if (!global.hasOwnProperty('Symbol')) {
+  test('in environments without Symbol, skips trying iterables', function (t) {
+    t.plan(1)
 
-  var set = new Set([1, 2, 3])
-  var setStream = strum(set)
-  var count = 0
-
-  t.equal(setStream._source, set)
-
-  setStream.on('data', function (data) {
-    t.equal(data, ++count)
+    t.throws(function () {
+      strum(new Set([1, 2, 3]))
+    })
   })
+} else {
+  test('can make a stream from an iterable', function (t) {
+    t.plan(5)
 
-  setStream.on('end', function () {
-    t.equal(count, 3)
+    var set = new Set([1, 2, 3])
+    var setStream = strum(set)
+    var count = 0
+
+    t.equal(setStream._source, set)
+
+    setStream.on('data', function (data) {
+      t.equal(data, ++count)
+    })
+
+    setStream.on('end', function () {
+      t.equal(count, 3)
+    })
   })
-})
+}
 
 test('sets properties on resulting stream', function (t) {
   t.plan(16)
