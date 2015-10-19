@@ -73,28 +73,21 @@ function * foreverRandom () {
 
 `strum(source, _options) -> stream`
 
-* source can be any of:
-  - A stream: yields the same stream, but augmented with metadata
-    (more on that later)
+* `source` can be any of:
+  - A stream: yields the _exact same stream_.
   - An array: yields a readable stream, emitting once for each item.
   - An iterable: yields a readable stream, emitting once for every `.next()`.
   - A promise: yields a readable stream that emits once the promise is realized.
   - A function: yields a transform stream, which is called with the value of
     each write, and will emit with each returned value.
 
-* _options is an optional object that can be used to attach metadata to your
-  stream; metadata like:
-  - `name`: An arbitrary name to make debugging easier.
-  - `description`: An arbitrary description of what the stream does.
-
-The returned stream will be augmented such that all streams that it is piped to
-will be available under `stream._downstreams` and all streams that pipe to it
-are available under `stream._upstreams`. This is in addition to the `._name`,
-and `._description` properties that will be provided.
+* `_options` is an optional object that will be passed to the stream
+  constructor.
 
 ## Notes
 
-* The returned value is always a standard node stream in objectMode.
+* The returned value is by default a standard node stream in `objectMode`. This
+  can be overridden by passing `{objectMode: false}` as your options object.
 * Contributions welcome!
 
 ## License

@@ -45,6 +45,18 @@ test('can make a stream from an array', function (t) {
   })
 })
 
+test('can pass options to stream constructor', function (t) {
+  t.plan(4)
+
+  var arr = ['lol', promisify('lol')]
+  var arrayStream = strum(arr, {objectMode: false})
+
+  arrayStream.on('data', function (buf) {
+    t.true(Buffer.isBuffer(buf))
+    t.equal(buf.toString(), 'lol')
+  })
+})
+
 test('arrays can contain promises', function (t) {
   t.plan(5)
 
@@ -70,7 +82,7 @@ test('those promises can cause errors', function (t) {
   var arrayStream = strum(arr)
 
   arrayStream.on('error', function (err) {
-    t.ok(isError(err))
+    t.true(isError(err))
     t.equal(err.message, 'rejected promise!!')
   })
 
@@ -104,6 +116,28 @@ test('can make a stream from a promise', function (t) {
   }
 })
 
+test('passes options to stream constructor', function (t) {
+  t.plan(3)
+
+  var promise = makePromise()
+  var promiseStream = strum(promise, {objectMode: false})
+
+  promiseStream.on('data', function (data) {
+    t.true(Buffer.isBuffer(data))
+    t.equal(data.toString(), 'lol')
+  })
+
+  promiseStream.on('end', function () {
+    t.pass('ends once resolved')
+  })
+
+  function makePromise () {
+    return new Promise(function (resolve, reject) {
+      resolve('lol')
+    })
+  }
+})
+
 test('emits error if promise is rejected', function (t) {
   t.plan(2)
 
@@ -115,7 +149,7 @@ test('emits error if promise is rejected', function (t) {
   })
 
   promiseStream.on('error', function (err) {
-    t.ok(isError(err))
+    t.true(isError(err))
     t.equal(err.message, 'promise rejected')
   })
 
@@ -152,7 +186,7 @@ test('if function throws, error is emitted', function (t) {
   var functionStream = strum(badFn)
 
   functionStream.on('error', function (err) {
-    t.ok(isError(err))
+    t.true(isError(err))
     t.equal(err.message, 'function threw!')
   })
 
@@ -160,6 +194,23 @@ test('if function throws, error is emitted', function (t) {
 
   function badFn () {
     throw new Error('function threw!')
+  }
+})
+
+test('passes options to stream constructor', function (t) {
+  t.plan(2)
+
+  var functionStream = strum(transformFn, {objectMode: false})
+
+  functionStream.on('data', function (data) {
+    t.true(Buffer.isBuffer(data))
+    t.equal(data.toString(), 'LOL')
+  })
+
+  functionStream.end('lol')
+
+  function transformFn (str) {
+    return str.toString().toUpperCase()
   }
 })
 
@@ -191,7 +242,7 @@ test('those promises can cause errors', function (t) {
   var functionStream = strum(transformFn)
 
   functionStream.on('error', function (err) {
-    t.ok(isError(err))
+    t.true(isError(err))
     t.equal(err.message, 'rejected promise!')
   })
 
@@ -226,6 +277,18 @@ if (!global.hasOwnProperty('Symbol')) {
 
     setStream.on('end', function () {
       t.equal(count, 3)
+    })
+  })
+
+  test('passes arguments to stream constructor', function (t) {
+    t.plan(4)
+
+    var set = new Set(['lol', promisify('lol')])
+    var setStream = strum(set, {objectMode: false})
+
+    setStream.on('data', function (data) {
+      t.true(Buffer.isBuffer(data))
+      t.equal(data.toString(), 'lol')
     })
   })
 }
