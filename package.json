@@ -1,6 +1,6 @@
 {
   "name": "strum",
-  "version": "1.0.0",
+  "version": "1.0.1",
   "description": "inspectable simple stream construction",
   "main": "index.js",
   "dependencies": {
