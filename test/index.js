@@ -28,14 +28,12 @@ test('throws error if source is invalid', function (t) {
 })
 
 test('can make a stream from an array', function (t) {
-  t.plan(6)
+  t.plan(5)
 
   var arr = [1, 2, 3]
   var count = 0
 
   var arrayStream = strum(arr)
-
-  t.equal(arrayStream._source, arr)
 
   arrayStream.on('data', function (x) {
     t.equal(x, arr[count++])
@@ -86,12 +84,10 @@ test('those promises can cause errors', function (t) {
 })
 
 test('can make a stream from a promise', function (t) {
-  t.plan(3)
+  t.plan(2)
 
   var promise = makePromise()
   var promiseStream = strum(promise)
-
-  t.equal(promiseStream._source, promise)
 
   promiseStream.on('data', function (data) {
     t.equal(data, 'lol')
@@ -131,11 +127,9 @@ test('emits error if promise is rejected', function (t) {
 })
 
 test('makes a transform stream from a function', function (t) {
-  t.plan(3)
+  t.plan(2)
 
   var functionStream = strum(transformFn)
-
-  t.equal(functionStream._source, transformFn)
 
   functionStream.on('data', function (data) {
     t.equal(data, 'LOL')
@@ -220,13 +214,11 @@ if (!global.hasOwnProperty('Symbol')) {
   })
 } else {
   test('can make a stream from an iterable', function (t) {
-    t.plan(5)
+    t.plan(4)
 
     var set = new Set([1, 2, 3])
     var setStream = strum(set)
     var count = 0
-
-    t.equal(setStream._source, set)
 
     setStream.on('data', function (data) {
       t.equal(data, ++count)
@@ -238,40 +230,12 @@ if (!global.hasOwnProperty('Symbol')) {
   })
 }
 
-test('sets properties on resulting stream', function (t) {
-  t.plan(16)
+test('a stream is ... already a stream', function (t) {
+  t.plan(1)
 
-  var originalStream = new Stream.Readable({read: function () {
-  }})
-  var anotherStream = new Stream.Writable({write: function () {
-  }})
+  var stream = new Stream.Readable()
 
-  var stream = strum(originalStream, {description: 'whatever', name: 'alice'})
-  var anotherStrum = strum(anotherStream, {description: 'another', name: 'jo'})
-
-  t.equal(stream._description, 'whatever')
-  t.equal(anotherStrum._description, 'another')
-  t.equal(stream._source, originalStream)
-  t.equal(anotherStrum._source, anotherStream)
-  t.equal(stream._name, 'alice')
-  t.equal(anotherStrum._name, 'jo')
-
-  t.deepEqual(stream._upstreams, [])
-  t.deepEqual(stream._downstreams, [])
-  t.deepEqual(anotherStrum._upstreams, [])
-  t.deepEqual(anotherStrum._downstreams, [])
-
-  stream.pipe(anotherStrum)
-
-  t.equal(anotherStrum._upstreams.length, 1)
-  t.equal(anotherStrum._upstreams[0], stream)
-  t.equal(stream._downstreams.length, 1)
-  t.equal(stream._downstreams[0], anotherStrum)
-
-  stream.unpipe(anotherStream)
-
-  t.deepEqual(anotherStrum._upstreams, [])
-  t.deepEqual(stream._downstreams, [])
+  t.equal(strum(stream), stream)
 })
 
 test('integration test 1', function (t) {
