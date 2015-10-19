@@ -7,9 +7,9 @@
 [![License](https://img.shields.io/npm/l/strum.svg?style=flat-square)](https://github.com/jarofghosts/strum/blob/master/LICENSE)
 [![experimental](http://badges.github.io/stability-badges/dist/experimental.svg)](http://github.com/badges/stability-badges)
 
-make streams out of things
+Make a stream out of almost anything
 
-## example
+## Example
 
 ```javascript
 var strum = require('strum')
@@ -22,7 +22,7 @@ function times2 (x) {
 }
 ```
 
-kinda handy, but where things get really neat:
+Kinda handy, but where things get really neat:
 
 ```javascript
 var strum = require('strum')
@@ -40,17 +40,19 @@ function makeRequest (query) {
 }
 ```
 
-it understands promises! any data source that returns a promise will be
-handled smartly, such that: if it resolves the resolved value is emitted
+It understands promises! any data source that returns a promise will be
+handled smartly, such that: if it resolves, the resolved value is emitted
 (rather than the promise itself), and if it is rejected, an error event is
 emitted with the rejected value.
 
-here, have another contrived example:
+Here, have another contrived (but more ES6y!) example:
 
 ```javascript
 const strum = require('strum')
 
-strum(foreverRandom()).pipe(strum(headsOrTails)).pipe(process.stdout)
+strum(foreverRandom())
+  .pipe(strum(headsOrTails))
+  .pipe(process.stdout)
 
 function headsOrTails (num) {
   return (num < 0.5 ? 'heads' : 'tails') + '\n'
@@ -72,29 +74,29 @@ function * foreverRandom () {
 `strum(source, _options) -> stream`
 
 * source can be any of:
-  - A stream: will be augmented to provide metadata (more on that later)
-  - An array: yields a readable stream, emitting once for each item
-  - An iterable: yields a readable stream, emitting once for every `.next()`
+  - A stream: yields the same stream, but augmented with metadata
+    (more on that later)
+  - An array: yields a readable stream, emitting once for each item.
+  - An iterable: yields a readable stream, emitting once for every `.next()`.
   - A promise: yields a readable stream that emits once the promise is realized.
   - A function: yields a transform stream, which is called with the value of
     each write, and will emit with each returned value.
 
 * _options is an optional object that can be used to attach metadata to your
   stream; metadata like:
-  - `name`: An arbitrary name to make debugging easier
-  - `description`: An arbitrary description of what the stream does
+  - `name`: An arbitrary name to make debugging easier.
+  - `description`: An arbitrary description of what the stream does.
 
 The returned stream will be augmented such that all streams that it is piped to
 will be available under `stream._downstreams` and all streams that pipe to it
 are available under `stream._upstreams`. This is in addition to the `._name`,
 and `._description` properties that will be provided.
 
-## notes
+## Notes
 
-this is extremely experimental and probably not even a good idea! i wouldn't
-use this for anything important, but feel free to open issues or otherwise
-contribute!
+* The returned value is always a standard node stream in objectMode.
+* Contributions welcome!
 
-## license
+## License
 
 MIT
