@@ -30,7 +30,6 @@ var fetch = require('isomorphic-fetch')
 
 strum(['dogs', 'cats', 'bears', 'gorillas'])
   .pipe(strum(makeRequest))
-  .pipe(strum(getBody))
   .pipe(process.stdout)
 
 function makeRequest (query) {
