@@ -2,7 +2,7 @@ var isError = require('util').isError
 
 var test = require('tape')
 var Stream = require('readable-stream')
-var Promise = global.Promise || require('bluebird')
+var Promise = global.Promise || require('es6-promise').Promise
 var Set = require('es6-set')
 
 var strum = require('../')
