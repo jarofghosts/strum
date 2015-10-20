@@ -71,7 +71,7 @@ function * foreverRandom () {
 
 ## API
 
-`strum(source, _options) -> stream`
+`strum(source, _streamOptions) -> stream`
 
 * `source` can be any of:
   - A stream: yields the _exact same stream_.
@@ -81,7 +81,7 @@ function * foreverRandom () {
   - A function: yields a transform stream, which is called with the value of
     each write, and will emit with each returned value.
 
-* `_options` is an optional object that will be passed to the stream
+* `_streamOptions` is an optional object that will be passed to the stream
   constructor.
 
 ## Notes
