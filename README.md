@@ -14,7 +14,7 @@ Make a stream out of almost anything
 ```javascript
 var strum = require('strum')
 
-strum([1, 2, 3]).pipe(process.stdout) //
+strum([1, 2, 3]).pipe(process.stdout)
 strum(new Set([4, 5, 6])).pipe(strum(times2)).pipe(process.stdout)
 
 function times2 (x) {
