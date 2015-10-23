@@ -1,3 +1,5 @@
+'use strict'
+
 var isStream = require('is-stream')
 var isIterable = require('is-iterable')
 var isPromise = require('is-promise')
