@@ -31,5 +31,5 @@ function strum (src, _opts) {
     return wrapPromise(src, opts)
   }
 
-  throw new Error('invalid source type')
+  throw new TypeError('invalid source type')
 }
