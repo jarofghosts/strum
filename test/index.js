@@ -48,7 +48,7 @@ test('can make a stream from an array', function (t) {
 test('can pass options to stream constructor', function (t) {
   t.plan(4)
 
-  var arr = ['lol', promisify('lol')]
+  var arr = ['lol', Promise.resolve('lol')]
   var arrayStream = strum(arr, {objectMode: false})
 
   arrayStream.on('data', function (buf) {
@@ -60,7 +60,7 @@ test('can pass options to stream constructor', function (t) {
 test('arrays can contain promises', function (t) {
   t.plan(5)
 
-  var arr = [promisify(1), promisify(2), promisify(3)]
+  var arr = [Promise.resolve(1), Promise.resolve(2), Promise.resolve(3)]
   var count = 0
 
   var arrayStream = strum(arr)
@@ -283,7 +283,7 @@ if (!global.hasOwnProperty('Symbol')) {
   test('passes arguments to stream constructor', function (t) {
     t.plan(4)
 
-    var set = new Set(['lol', promisify('lol')])
+    var set = new Set(['lol', Promise.resolve('lol')])
     var setStream = strum(set, {objectMode: false})
 
     setStream.on('data', function (data) {
@@ -306,7 +306,7 @@ test('integration test 1', function (t) {
 
   var result = []
 
-  strum(['charizard', 'pikachu', promisify('chansey'), promisify('mr. mime')])
+  strum(['charizard', 'pikachu', Promise.resolve('chansey'), Promise.resolve('mr. mime')])
     .pipe(strum(uppercase))
     .on('data', function (data) {
       result.push(data)
@@ -316,12 +316,6 @@ test('integration test 1', function (t) {
     })
 
   function uppercase (str) {
-    return promisify(str.toString().toUpperCase())
+    return Promise.resolve(str.toString().toUpperCase())
   }
 })
-
-function promisify (n) {
-  return new Promise(function (resolve, reject) {
-    resolve(n)
-  })
-}
