@@ -215,7 +215,7 @@ test('passes options to stream constructor', function (t) {
 })
 
 test('function streams understand promises', function (t) {
-  t.plan(2)
+  t.plan(6)
 
   var functionStream = strum(transformFn)
 
@@ -227,12 +227,14 @@ test('function streams understand promises', function (t) {
     t.pass('ends')
   })
 
+  functionStream.write('LoL')
+  functionStream.write('LOL')
+  functionStream.write('Lol')
+  functionStream.write('loL')
   functionStream.end('lol')
 
   function transformFn (str) {
-    return new Promise(function (resolve, reject) {
-      resolve(str.toString().toUpperCase())
-    })
+    return Promise.resolve(str.toString().toUpperCase())
   }
 })
 
