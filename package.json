@@ -1,7 +1,7 @@
 {
   "name": "strum",
   "version": "2.0.2",
-  "description": "inspectable simple stream construction",
+  "description": "simple stream construction",
   "main": "index.js",
   "dependencies": {
     "es6-symbol": "^3.0.0",
